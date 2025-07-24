@@ -11,11 +11,24 @@ interface DataProps{
   }
 }
 
-async function getData(){
+async function delayFetch(url: string, delay: number) {
+  await new Promise(resolve => setTimeout(resolve, delay))
+  const response = await fetch(url);
+
+  return response.json()
+  
+}
+
+/*async function getData(){
   //API GIT: https://api.github.com/users/eoGabrielo/repos
   const response = await fetch("https://api.github.com/users/eoGabrielo/repos");
 
   return response.json();
+}*/
+
+async function getData() {
+  const data = await delayFetch("https://api.github.com/users/eoGabrielo/repos", 3500);
+  return data;
 }
 
 
