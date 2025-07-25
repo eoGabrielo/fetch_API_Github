@@ -1,3 +1,4 @@
+import { OwerRepo } from "@/components/OwerRepo";
 
 interface DataProps{
   id: number;
@@ -13,8 +14,7 @@ interface DataProps{
 
 async function delayFetch(url: string, delay: number) {
   await new Promise(resolve => setTimeout(resolve, delay))
-  const response = await fetch(url);
-
+  const response = await fetch(url, {next: {revalidate: 120}})//Bloqueia cache, fazer req de 120s.
   return response.json()
   
 }
@@ -27,7 +27,7 @@ async function delayFetch(url: string, delay: number) {
 }*/
 
 async function getData() {
-  const data = await delayFetch("https://api.github.com/users/eoGabrielo/repos", 1500);
+  const data = await delayFetch("https://api.github.com/users/eoGabrielo/repos", 100);
   return data;
 }
 
@@ -46,7 +46,13 @@ export default async function Home(){
       {data.map((item) => (
         <div key={item.id}>
           <strong>Repositório: </strong><a>{item.name}</a>
-          <br /><br />
+          <br />
+          <OwerRepo 
+            avatar_url={item.owner.avatar_url}
+            name={item.owner.login}
+          />
+
+          <br />
         </div>
       ))}
     </main>
